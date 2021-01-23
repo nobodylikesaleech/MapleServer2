@@ -48,6 +48,11 @@ namespace MapleServer2.Types
             return new PlayerStats
             {
                 Hp = new PlayerStat(1000, 0, 1000),
+                Str = new PlayerStat(10, 10, 10),
+                Dex = new PlayerStat(10, 10, 10),
+                Int = new PlayerStat(10, 10, 10),
+                Luk = new PlayerStat(10, 10, 10),
+                CritRate = new PlayerStat(10, 10, 10),
                 CurrentHp = new PlayerStat(0, 500, 0),
                 Spirit = new PlayerStat(100, 100, 100),
                 Stamina = new PlayerStat(120, 120, 120),

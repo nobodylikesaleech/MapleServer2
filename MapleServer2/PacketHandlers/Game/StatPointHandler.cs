@@ -42,12 +42,14 @@ namespace MapleServer2.PacketHandlers.Game
             byte statTypeIndex = packet.ReadByte();
             session.Player.StatPointDistribution.AddPoint(statTypeIndex);
             session.Send(StatPointPacket.WriteStatPointDistribution(session.Player));
+            session.Send(SendStatPacket.WriteCharacterStats(session, session.Player));
         }
 
         private void HandleResetStatDistribution(GameSession session)
         {
             session.Player.StatPointDistribution.ResetPoints();
             session.Send(StatPointPacket.WriteStatPointDistribution(session.Player));
+            session.Send(SendStatPacket.WriteCharacterStats(session, session.Player));
         }
     }
 }
