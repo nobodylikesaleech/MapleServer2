@@ -6,56 +6,39 @@ namespace GameDataParser.Files
 {
     public static class Hash
     {
-        public static bool CheckHash(string filename)
+        public static bool HasValidHash(string filename)
         {
-            try
+            string hashPath = $"{Paths.HASH}/{filename}-hash";
+
+            if (!File.Exists(hashPath))
             {
-                string hashPath = $"GameDataParser/Hash/{filename.Split("/")[^1]}-hash";
-
-                string currentHash = File.ReadAllText(hashPath);
-
-                using (MD5 md5 = MD5.Create())
-                {
-                    using (FileStream stream = File.OpenRead(filename))
-                    {
-                        byte[] hash = md5.ComputeHash(stream);
-                        string newHash = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
-
-                        return currentHash.Equals(newHash);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                if (!ex.GetType().IsAssignableFrom(typeof(FileNotFoundException)))
-                {
-                    Console.WriteLine(ex);
-                }
-
                 return false;
             }
+
+            string currentHash = File.ReadAllText(hashPath);
+            string newHash = GetHash(filename);
+
+            return currentHash.Equals(newHash);
         }
 
         public static void WriteHash(string filename)
         {
-            try
-            {
-                string hashPath = $"GameDataParser/Hash/{filename.Split("/")[^1]}-hash";
+            string hashPath = $"{Paths.HASH}/{filename}-hash";
 
-                using (MD5 md5 = MD5.Create())
+            string newHash = GetHash(filename);
+
+            File.WriteAllText(hashPath, newHash);
+        }
+
+        public static String GetHash(string filename)
+        {
+            using (MD5 md5 = MD5.Create())
+            {
+                using (FileStream stream = File.OpenRead($"{Paths.OUTPUT}/{filename}"))
                 {
-                    using (FileStream stream = File.OpenRead(filename))
-                    {
-                        byte[] hash = md5.ComputeHash(stream);
-                        string hashString = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
-
-                        File.WriteAllText(hashPath, hashString);
-                    }
+                    byte[] hash = md5.ComputeHash(stream);
+                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
             }
         }
     }

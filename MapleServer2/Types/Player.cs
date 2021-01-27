@@ -42,6 +42,7 @@ namespace MapleServer2.Types
         public byte Animation;
         public PlayerStats Stats;
         public IFieldObject<Mount> Mount;
+        public bool IsVIP;
 
         // Combat, Adventure, Lifestyle
         public int[] Trophy = new int[3];
@@ -49,7 +50,9 @@ namespace MapleServer2.Types
         public List<short> Stickers = new List<short> { 0 };
 
         public CoordF Coord;
-        public CoordF Rotation; // Rotation?
+        public CoordF Rotation;
+        public CoordF SafeCoord = CoordF.From(0, 0, 0);
+        public bool OnAirMount = false;
 
         // Appearance
         public SkinColor SkinColor;
@@ -71,6 +74,7 @@ namespace MapleServer2.Types
         public StatDistribution StatPointDistribution = new StatDistribution();
 
         public Dictionary<ItemSlot, Item> Equips = new Dictionary<ItemSlot, Item>();
+        public Dictionary<ItemSlot, Item> Cosmetics = new Dictionary<ItemSlot, Item>();
         public List<Item> Badges = new List<Item>();
         public ItemSlot[] EquipSlots { get; }
         private ItemSlot DefaultEquipSlot => EquipSlots.Length > 0 ? EquipSlots[0] : ItemSlot.NONE;
@@ -93,6 +97,7 @@ namespace MapleServer2.Types
         // TODO make this as an array
 
         public long GuildId;
+        public int GuildContribution;
         public Wallet Wallet { get; private set; }
 
         public Player()
@@ -105,7 +110,7 @@ namespace MapleServer2.Types
         {
             int job = 50; // Archer
             PlayerStats stats = PlayerStats.Default();
-            StatDistribution StatPointDistribution = new StatDistribution();
+            StatDistribution StatPointDistribution = new StatDistribution(totalStats: 18);
             List<SkillTab> skillTabs = new List<SkillTab>
             {
                 new SkillTab((Job) (job))
@@ -151,6 +156,7 @@ namespace MapleServer2.Types
                     10000458, 10000465, 10000503, 10000512, 10000513, 10000514, 10000537, 10000565, 10000602,
                     10000603, 10000638, 10000644
                 },
+                IsVIP = false,
             };
             player.Equips.Add(ItemSlot.RH, Item.TutorialBow(player));
             return player;
@@ -195,7 +201,8 @@ namespace MapleServer2.Types
                 Stats = stats,
                 GameOptions = new GameOptions(),
                 Inventory = new Inventory(48),
-                Mailbox = new Mailbox()
+                Mailbox = new Mailbox(),
+                IsVIP = false,
             };
         }
 
@@ -226,7 +233,8 @@ namespace MapleServer2.Types
                 Coord = CoordF.From(-675, 525, 600), // Intro map (52000065)
                 GameOptions = new GameOptions(),
                 Inventory = new Inventory(48),
-                Mailbox = new Mailbox()
+                Mailbox = new Mailbox(),
+                IsVIP = false,
             };
         }
 
